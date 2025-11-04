@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "Building analytics platfrom marketplace stack"
+docker compose build --no-cache
+echo "🚀 Starting analytics platform marketplace stack"
+docker compose up -d
