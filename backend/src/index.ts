@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cors from "cors";
 import { AppDataSource } from './dataSource';
 import fileRoute from './fileRoute';
 // import bodyParser from 'body-parser';
@@ -9,6 +10,7 @@ global.Buffer = global.Buffer || Buffer;
 const app = express();
 const port = process.env.PORT || 8888;
 
+app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 

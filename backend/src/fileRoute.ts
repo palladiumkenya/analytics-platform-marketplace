@@ -17,6 +17,27 @@ router.get("/", async(req: Request, res: Response, next: NextFunction) => {
   });
 });
 
+router.get("/:pluginId", async(req: Request, res: Response, next: NextFunction) => {
+  const pluginId = Number(req.params.pluginId);
+  try {
+    const plugin = await pluginRepo.findOneBy({
+      id: pluginId
+    });
+
+    if(!plugin) {
+      return res.status(404).json({ error: "Plugin not found"});
+    }
+    const signedUrl = await getFileUrl(plugin.pluginKey);
+    const data = {
+      url: signedUrl,
+      pluginName: plugin.pluginName
+    }
+    res.json({data})
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post(
   "/upload",
   upload.any(),
@@ -62,7 +83,6 @@ try {
         return res.json(parsed);
       } catch (err) {
         next(err);
-        // return res.type("text/plain").send(content);
       }
     }
         

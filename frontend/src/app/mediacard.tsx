@@ -14,12 +14,17 @@ export default function MediaCard(props: any) {
     const {pluginName, description, pluginId, installed} = props;
     
     const installPlugin =  async () => {
-      const response = await fetch(`http://localhost:5000/plugin/install/${pluginId}`, {
-        method: 'POST',
-    });
-    if(response.ok) {
-        console.log('Successfully installed plugin');
-    }
+      // Fetch url
+      const response = await fetch(`http://172.17.0.1:8888/api/v1/configs/${pluginId}`, { cache: 'no-store' });
+      const responseBody = await response.json();
+      const pluginUrl = responseBody.data.url;
+      const link = document.createElement('a');
+      link.href = pluginUrl;
+      link.download = ''; // let browser use the filename from the server
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);      
+    
     }
   return (
     <Card sx={{ maxWidth: 350 }}>

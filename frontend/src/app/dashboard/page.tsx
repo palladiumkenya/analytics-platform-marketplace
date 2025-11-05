@@ -25,23 +25,6 @@ export default async function Page() {
 const res = await fetch('http://172.17.0.1:8888/api/v1/configs', { cache: 'no-store' });
 const response = await res.json()
 const data: Plugin[] = response.data;
-// setPlugins(data);
-
-
-// let fetchData = useCallback(async () => {
-//   const res = await fetch('http://localhost:5000/plugin');
-//   const data: Plugin[] = await res.json();
-//   setPlugins(data);
-// }, [])
-
-// useEffect(() => {
-//   async function fetchPlugins() {
-//     const res = await fetch('http://localhost:5000/plugin');
-//     const data: Plugin[] = await res.json();
-//     setPlugins(data);
-//   }
-//   fetchPlugins();
-// }, []);
 
   return (
     <Box
