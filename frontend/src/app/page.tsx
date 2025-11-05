@@ -1,22 +1,46 @@
-'use client'
+// 'use client'
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-// import Counter from "./counter";
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Grid from '@mui/material/Unstable_Grid2';
+import MediaCard from "./mediacard";
+import BasicModal from "./submissionModal";
+// import { useState, useEffect } from "react";
 
-export default function Home() {
-  const router = useRouter();
+const drawerWidth = 240;
+
+interface Plugin {
+  id: number;
+  pluginName: string;
+  description: string;
+  version: number;
+}
+
+
+export default async function Page() {
+// const [plugins, setPlugins] = useState<Plugin[]>([]);
+
+const res = await fetch('http://172.17.0.1:8888/api/v1/configs', { cache: 'no-store' });
+const response = await res.json()
+const data: Plugin[] = response.data;
+
   return (
-    <>
-      <h1>Hello, marketplace</h1>
-      <p>
-        <Link href="/dashboard">Dashboard</Link>
-      </p>
-
-        <button className="bg-indigo-600 text-white text-sm leading-6 font-medium py-2 px-3 rounded-lg" type="button" onClick={() => router.push("/dashboard")}>Dashboard button</button>
-    </>
-
-
+    <Box
+      component="main"
+      sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+    >
+      <Toolbar />
+      {/* <BasicModal stateChanger={fetchData} /> */}
+      <BasicModal />
+      <Grid container spacing={3}>
+          {
+            data.map(({ id, pluginName, description, version }) => (
+              <Grid key={id} xs={4}>
+                <MediaCard pluginName={pluginName} description={description} pluginId={id} version = {version} />
+              </Grid>
+            ))
+          }
+      </Grid>
+    </Box>
   );
 }

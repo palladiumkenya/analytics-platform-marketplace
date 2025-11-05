@@ -7,11 +7,9 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export default function MediaCard(props: any) {
-    const {pluginName, description, pluginId, installed} = props;
+    const {pluginName, description, pluginId, version} = props;
     
     const installPlugin =  async () => {
       // Fetch url
@@ -35,15 +33,14 @@ export default function MediaCard(props: any) {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {pluginName}
+          {`${pluginName} version(${version})`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
             {description}
         </Typography>
       </CardContent>
       <CardActions>
-        {!installed && <Button onClick={installPlugin} size="small">Download</Button>}
-        {installed && <IconButton aria-label="Installed" disabled color="info" size="small"><CheckCircleIcon color='info'/></IconButton>}
+        <Button onClick={installPlugin} size="small">Download</Button>
       </CardActions>
     </Card>
   );

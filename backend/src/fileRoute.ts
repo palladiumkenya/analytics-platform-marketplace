@@ -48,13 +48,30 @@ router.post(
     if (!files[0]) return res.status(400).json({ error: "No file uploaded" });
     const { buffer, mimetype, fieldname, originalname } = files[0];
     try {
-      const result = await uploadFile(originalname, buffer, mimetype);
-      const pluginKey = result.key;
-      const pluginUrl = await getFileUrl(pluginKey);
-      // persist in db
-      console.log('upload results', pluginUrl);
-      const plugin = await pluginRepo.create({ pluginName, description, pluginUrl, pluginKey , version: 1, categoryId: 1, createdAt: new Date() });
-      await pluginRepo.save(plugin);
+      const existingPlugin = await pluginRepo.findOneBy({
+        pluginName
+      });
+
+      if (existingPlugin) {
+        const updatedVersion = existingPlugin.version + 1;
+        existingPlugin.version = updatedVersion;
+        pluginRepo.save(existingPlugin);
+      } else {
+        const result = await uploadFile(originalname, buffer, mimetype);
+        const pluginKey = result.key;
+        const pluginUrl = await getFileUrl(pluginKey);
+        // persist in db
+        const plugin = await pluginRepo.create({
+          pluginName,
+          description,
+          pluginUrl,
+          pluginKey,
+          version: 1,
+          categoryId: 1,
+          createdAt: new Date(),
+        });
+        await pluginRepo.save(plugin);
+      }
       res.json({ message: "Successfully uploaded config"});
     } catch (err) {
       console.error(err);
@@ -84,8 +101,7 @@ try {
       } catch (err) {
         next(err);
       }
-    }
-        
+    }        
   } catch (err) {
     next(err);
   }
