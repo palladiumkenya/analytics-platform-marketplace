@@ -3,9 +3,9 @@ services:
     image: postgres:15
     container_name: marketplace_db
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-marketplace}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-nthusi2017} 
+      - POSTGRES_DB=${DATABASE_NAME:-marketplace}
+      - POSTGRES_USER=${DATABASE_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-nthusi2017} 
     restart: always
     volumes:
       - marketplace_db:/var/lib/postgresql/data
@@ -20,6 +20,10 @@ services:
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_BUCKET=${MINIO_BUCKET}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
     restart: always
   frontend:
     container_name: marketplace_frontend
