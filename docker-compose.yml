@@ -1,14 +1,14 @@
 services:
   db:
     image: postgres:15
-    container_name: marketpace_db
+    container_name: marketplace_db
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-marketplace}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-nthusi2017} 
     restart: always
     volumes:
-      - marketpace_db:/var/lib/postgresql/data
+      - marketplace_db:/var/lib/postgresql/data
       - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d  
   backend:
     container_name: martketplace_backend
@@ -40,7 +40,7 @@ services:
     volumes:
       - minio_data:/data    
 volumes:
- marketpace_db:
+ marketplace_db:
    external: false
  minio_data:
    external: false 
