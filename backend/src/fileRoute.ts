@@ -4,6 +4,7 @@ import multer from "multer";
 import { uploadFile, getFileUrl, getFile } from "./service/fileService";
 import { Plugin } from "./entity/Plugin";
 import { AppDataSource } from "./dataSource";
+import { PluginCategory } from './entity/PluginCategory';
 
 const upload = multer();
 const router = express.Router();
@@ -11,10 +12,47 @@ type responseType = "file" | "json";
 const pluginRepo = AppDataSource.getRepository(Plugin);
 
 router.get("/", async(req: Request, res: Response, next: NextFunction) => {
-  const plugins = await pluginRepo.find();
-  res.json({
-    data: plugins
-  });
+    const plugins = await pluginRepo.find();
+    res.json({
+      data: plugins,
+    });
+});
+
+router.get("/mappers", async (req: Request, res: Response, next: NextFunction) => {
+try {
+    let config = req.query.config as string;
+    const responseType = req.query.type as responseType;
+    if (!config) {
+      return res.status(400).json({ error: "Config parameter is required" });
+    }
+    if (!responseType) {
+      return res.status(400).json({ error: "Type parameter is required" });
+    }
+    if (config === "default") {
+      const defaultPlugin = await pluginRepo.createQueryBuilder("plugin")
+      .innerJoin(PluginCategory, "plugin_category", "plugin_category.id = plugin.category_id")
+      .orderBy("plugin.created_at", "ASC")
+      .getOne();
+      if (defaultPlugin) {
+       config = defaultPlugin.pluginKey;
+      }
+      
+    }
+    if (responseType === "file") {
+      const url = await getFileUrl(config);
+      res.json({ url });
+    } else if (responseType === "json") {
+      const content = await getFile(config);
+      try {
+        const parsed = JSON.parse(content);
+        return res.json(parsed);
+      } catch (err) {
+        next(err);
+      }
+    }        
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get("/:pluginId", async(req: Request, res: Response, next: NextFunction) => {
@@ -80,31 +118,6 @@ router.post(
   }
 );
 
-router.get("/mappers", async (req: Request, res: Response, next: NextFunction) => {
-try {
-    const config = req.query.config as string | undefined;
-    const responseType = req.query.type as responseType;
-    if (!config) {
-      return res.status(400).json({ error: "Config parameter is required" });
-    }
-    if (!responseType) {
-      return res.status(400).json({ error: "Type parameter is required" });
-    }
-    if (responseType === "file") {
-      const url = await getFileUrl(config);
-      res.json({ url });
-    } else if (responseType === "json") {
-      const content = await getFile(config);
-      try {
-        const parsed = JSON.parse(content);
-        return res.json(parsed);
-      } catch (err) {
-        next(err);
-      }
-    }        
-  } catch (err) {
-    next(err);
-  }
-});
+
 
 export default router;
