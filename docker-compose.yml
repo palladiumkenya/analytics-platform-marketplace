@@ -14,7 +14,7 @@ services:
     container_name: martketplace_backend
     build: ./backend/
     ports:
-      - "8888:8888"
+      - "${APP_PORT:-8888}:8888"
     environment:
       - MINIO_ENDPOINT=${MINIO_ENDPOINT}
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
