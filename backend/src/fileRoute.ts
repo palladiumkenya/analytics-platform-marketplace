@@ -66,6 +66,7 @@ router.get("/:pluginId", async(req: Request, res: Response, next: NextFunction) 
       return res.status(404).json({ error: "Plugin not found"});
     }
     const signedUrl = await getFileUrl(plugin.pluginKey);
+    console.log('signed url:', signedUrl);
     const data = {
       url: signedUrl,
       pluginName: plugin.pluginName

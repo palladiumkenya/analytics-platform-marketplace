@@ -137,7 +137,7 @@ const VisuallyHiddenInput = styled('input')({
                 formDataToSubmit.append('default', formData.file);
             }
             try {
-                const response = await fetch('http://172.17.0.1:8888/api/v1/configs/upload', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_MARKETPLACE_API}/configs/upload`, {
                     method: 'POST',
                     body: formDataToSubmit,
                 });
