@@ -13,7 +13,7 @@ export default function MediaCard(props: any) {
     
     const installPlugin =  async () => {
       // Fetch url
-      const response = await fetch(`http://172.17.0.1:8888/api/v1/configs/${pluginId}`, { cache: 'no-store' });
+      const response = await fetch(`${process.env.NEXT_PUBLIC_MARKETPLACE_API}/configs/${pluginId}`, { cache: 'no-store' });
       const responseBody = await response.json();
       const pluginUrl = responseBody.data.url;
       const link = document.createElement('a');
