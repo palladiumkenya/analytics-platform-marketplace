@@ -18,7 +18,7 @@ interface Plugin {
 export default async function Page() {
 // const [plugins, setPlugins] = useState<Plugin[]>([]);
 
-const res = await fetch(`${process.env.NEXT_PUBLIC_MARKETPLACE_API}/configs`, { cache: 'no-store' });
+const res = await fetch(`${process.env.MARKETPLACE_API}/configs`, { cache: 'no-store' });
 const response = await res.json()
 const data: Plugin[] = response.data;
 
